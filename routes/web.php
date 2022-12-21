@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\IndexController;
+use App\Http\Controllers\Auth\AdminLoginController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,9 +21,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::prefix('admin')->group(function () {
-    Route::get('login', [\App\Http\Controllers\Auth\AdminLoginController::class, 'login'])->name('admin.auth.login');
-        Route::post('login', [\App\Http\Controllers\Auth\AdminLoginController::class, 'loginAdmin'])->name('admin.auth.loginAdmin');
-        Route::post('logout', [\App\Http\Controllers\Auth\AdminLoginController::class, 'logout'])->name('admin.auth.logout');
+    Route::get('login', [AdminLoginController::class, 'login'])->name('admin.auth.login');
+        Route::post('login', [AdminLoginController::class, 'loginAdmin'])->name('admin.auth.loginAdmin');
+        Route::post('logout', [AdminLoginController::class, 'logout'])->name('admin.auth.logout');
 
     Route::group(['middleware' => ['auth:admin']], function () {
         Route::get('/', [IndexController::class, 'index'])->name('admin.dashboard');
@@ -32,6 +34,12 @@ Route::prefix('admin')->group(function () {
         Route::post('/category-update/{category}', [CategoryController::class, 'update'])->name('admin.category.update');
         Route::post('/{category}', [CategoryController::class, 'destroy'])->name('admin.category.delete');
 
+        Route::get('/brands', [BrandController::class, 'index'])->name('admin.brands.index');
+        Route::get('/brand-add', [BrandController::class, 'create'])->name('admin.brand.create');
+        Route::post('/', [BrandController::class, 'store'])->name('admin.brand.store');
+        Route::get('/brand-edit/{brand}', [BrandController::class, 'edit'])->name('admin.brand.edit');
+        Route::post('/brand-update/{brand}', [BrandController::class, 'update'])->name('admin.brand.update');
+        Route::post('/delete-brand/{brand}', [BrandController::class, 'destroy'])->name('admin.brand.delete');
     });
     });
 

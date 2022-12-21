@@ -28,6 +28,7 @@ class CategoryController extends Controller
 
     public function store(CategoryStoreRequest $request)
     {
+
         $data = $request->validated();
         $this->categoryService->create($data);
         return redirect('/admin/categories');
